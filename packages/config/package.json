@@ -1,0 +1,10 @@
+{
+  "name": "@portfolio/config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "prettier.js",
+  "files": [
+    "prettier.js",
+    "tsconfig.base.json"
+  ]
+}
