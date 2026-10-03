@@ -1,16 +1,18 @@
+import Link from 'next/link';
 import type { Project } from '@/lib/schemas';
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="flex flex-col rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 transition-colors hover:border-zinc-700">
-      <h3 className="text-lg font-semibold text-zinc-50">{project.title}</h3>
+      <h3 className="text-lg font-semibold text-zinc-50">
+        <Link href={`/projects/${project.slug}`} className="hover:text-indigo-300">
+          {project.title}
+        </Link>
+      </h3>
       <p className="mt-2 flex-1 text-sm text-zinc-400">{project.summary}</p>
       <ul className="mt-4 flex flex-wrap gap-2">
         {project.techStack.map((tech) => (
-          <li
-            key={tech}
-            className="rounded-full bg-zinc-800 px-2.5 py-1 text-xs text-zinc-300"
-          >
+          <li key={tech} className="rounded-full bg-zinc-800 px-2.5 py-1 text-xs text-zinc-300">
             {tech}
           </li>
         ))}

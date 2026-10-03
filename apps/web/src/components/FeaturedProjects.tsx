@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getProjects } from '@/lib/api';
 import { ProjectCard } from './ProjectCard';
 
@@ -13,12 +14,12 @@ export async function FeaturedProjects() {
             <h2 className="text-3xl font-bold tracking-tight text-zinc-50">Featured Projects</h2>
             <p className="mt-2 text-zinc-400">A few things I&apos;ve built recently.</p>
           </div>
-          <a
+          <Link
             href="/projects"
             className="hidden text-sm font-medium text-indigo-400 hover:text-indigo-300 sm:block"
           >
             View all →
-          </a>
+          </Link>
         </div>
 
         {featured.length > 0 ? (
