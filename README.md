@@ -44,6 +44,15 @@ Install these before running anything locally:
 
 ## Local development
 
+### Database
+
+```bash
+docker compose up -d      # starts Postgres, from the repo root
+```
+
+Stop it with `docker compose down` (add `-v` to also wipe the data volume
+and start clean next time).
+
 ### Frontend
 
 ```bash
@@ -55,6 +64,9 @@ Runs at http://localhost:3000.
 
 ### Backend
 
+Requires Postgres running (see above) — Flyway migrates the schema and
+Spring connects to it on startup.
+
 ```bash
 cd apps/api
 mvn spring-boot:run
@@ -62,7 +74,8 @@ mvn spring-boot:run
 
 Runs at http://localhost:8080. Try:
 
-- http://localhost:8080/api/hello
+- http://localhost:8080/api/projects
+- http://localhost:8080/api/projects/portfolio-monorepo
 - http://localhost:8080/actuator/health
 
 ## Current status
@@ -71,10 +84,14 @@ This repo is being built incrementally. As of now:
 
 - [x] Monorepo scaffold (Turborepo + npm workspaces)
 - [x] `apps/web` — Next.js hello-world page
-- [x] `apps/api` — Spring Boot hello-world endpoint + actuator health
+- [x] `apps/api` — layered `Project` resource (entity, repository, DTO,
+      service, controller) backed by Postgres via Flyway migrations,
+      verified end-to-end against a Docker-run database
+- [x] Centralized exception handling (`GlobalExceptionHandler`, RFC 7807
+      `ProblemDetail` responses)
 - [x] Base CI: lint-only, parallel jobs for web/api
-- [ ] Full page set, real API endpoints, Postgres + Flyway, testing, Docker
-      Compose, pre-commit hooks — coming in later steps
+- [ ] `BlogPost` and `Contact` resources, frontend fetching from the API,
+      testing, pre-commit hooks — coming in later steps
 
 ## Known shortcuts (flagged for later)
 
@@ -85,7 +102,6 @@ This repo is being built incrementally. As of now:
 - **`lint-api` doesn't actually lint.** No Checkstyle/Spotless is configured
   yet, so the CI job just compiles the project as a stand-in gate. This will
   be replaced with real static analysis in the code-quality step.
-- **No lockfile committed yet.** `package-lock.json` doesn't exist because
-  npm isn't installed on this machine yet. Run `npm install` once you have
-  Node set up, then commit the generated lockfile — `npm ci` in CI depends
-  on it.
+- **`docker-compose.yml` only runs Postgres**, not the API itself — the
+  original spec calls for both. Adding the API as a service needs a
+  Dockerfile for `apps/api`, which hasn't been written yet.

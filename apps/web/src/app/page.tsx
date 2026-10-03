@@ -1,10 +1,42 @@
-export default function Home() {
+import type { Metadata } from 'next';
+import { About } from '@/components/About';
+import { ContactCta } from '@/components/ContactCta';
+import { FeaturedProjects } from '@/components/FeaturedProjects';
+import { Footer } from '@/components/Footer';
+import { Hero } from '@/components/Hero';
+import { Nav } from '@/components/Nav';
+import { Skills } from '@/components/Skills';
+import { getProfile } from '@/lib/api';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+  return { title: profile ? `${profile.name} | ${profile.title}` : 'Portfolio' };
+}
+
+export default async function Home() {
+  const profile = await getProfile();
+
+  if (!profile) {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-6">
+        <p className="text-zinc-400">
+          Profile unavailable. Check that the API is running and reload.
+        </p>
+      </main>
+    );
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Hello, Portfolio 👋</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        Next.js frontend is running. Backend wiring comes in the next step.
-      </p>
-    </main>
+    <>
+      <Nav name={profile.name} />
+      <main>
+        <Hero name={profile.name} title={profile.title} tagline={profile.tagline} />
+        <FeaturedProjects />
+        <About bio={profile.bio} />
+        <Skills />
+        <ContactCta />
+      </main>
+      <Footer name={profile.name} githubUrl={profile.githubUrl} />
+    </>
   );
 }
