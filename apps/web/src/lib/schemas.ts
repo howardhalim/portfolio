@@ -27,3 +27,11 @@ export const profileSchema = z.object({
 });
 
 export type Profile = z.infer<typeof profileSchema>;
+
+export const skillSchema = z.object({
+  name: z.string(),
+});
+
+export type Skill = z.infer<typeof skillSchema>;
+
+export const skillListSchema = z.array(skillSchema);

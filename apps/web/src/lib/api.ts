@@ -1,4 +1,12 @@
-import { profileSchema, projectListSchema, projectSchema, type Profile, type Project } from './schemas';
+import {
+  profileSchema,
+  projectListSchema,
+  projectSchema,
+  skillListSchema,
+  type Profile,
+  type Project,
+  type Skill,
+} from './schemas';
 
 const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:8080';
 
@@ -51,5 +59,21 @@ export async function getProject(slug: string): Promise<Project | null> {
   } catch (error) {
     console.error(`Failed to fetch project "${slug}" from the API`, error);
     return null;
+  }
+}
+
+export async function getSkills(): Promise<Skill[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/skills`, { cache: 'no-store' });
+
+    if (!response.ok) {
+      console.error(`GET /api/skills failed with status ${response.status}`);
+      return [];
+    }
+
+    return skillListSchema.parse(await response.json());
+  } catch (error) {
+    console.error('Failed to fetch skills from the API', error);
+    return [];
   }
 }
