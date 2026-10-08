@@ -1,8 +1,12 @@
 import {
+  blogPostSchema,
+  blogPostSummaryListSchema,
   profileSchema,
   projectListSchema,
   projectSchema,
   skillListSchema,
+  type BlogPost,
+  type BlogPostSummary,
   type Profile,
   type Project,
   type Skill,
@@ -75,5 +79,41 @@ export async function getSkills(): Promise<Skill[]> {
   } catch (error) {
     console.error('Failed to fetch skills from the API', error);
     return [];
+  }
+}
+
+export async function getBlogPosts(): Promise<BlogPostSummary[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/blog-posts`, { cache: 'no-store' });
+
+    if (!response.ok) {
+      console.error(`GET /api/blog-posts failed with status ${response.status}`);
+      return [];
+    }
+
+    return blogPostSummaryListSchema.parse(await response.json());
+  } catch (error) {
+    console.error('Failed to fetch blog posts from the API', error);
+    return [];
+  }
+}
+
+export async function getBlogPost(slug: string): Promise<BlogPost | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/blog-posts/${encodeURIComponent(slug)}`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      if (response.status !== 404) {
+        console.error(`GET /api/blog-posts/${slug} failed with status ${response.status}`);
+      }
+      return null;
+    }
+
+    return blogPostSchema.parse(await response.json());
+  } catch (error) {
+    console.error(`Failed to fetch blog post "${slug}" from the API`, error);
+    return null;
   }
 }

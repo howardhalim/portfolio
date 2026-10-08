@@ -35,3 +35,20 @@ export const skillSchema = z.object({
 export type Skill = z.infer<typeof skillSchema>;
 
 export const skillListSchema = z.array(skillSchema);
+
+export const blogPostSummarySchema = z.object({
+  slug: z.string(),
+  title: z.string(),
+  summary: z.string(),
+  publishedAt: z.string(),
+});
+
+export type BlogPostSummary = z.infer<typeof blogPostSummarySchema>;
+
+export const blogPostSummaryListSchema = z.array(blogPostSummarySchema);
+
+export const blogPostSchema = blogPostSummarySchema.extend({
+  content: z.string(),
+});
+
+export type BlogPost = z.infer<typeof blogPostSchema>;
