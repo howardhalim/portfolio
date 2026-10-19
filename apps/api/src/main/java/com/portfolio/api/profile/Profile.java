@@ -33,6 +33,9 @@ public class Profile {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String bio;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String about;
+
     @Column(name = "github_url")
     private String githubUrl;
 
@@ -80,6 +83,10 @@ public class Profile {
 
     public String getBio() {
         return bio;
+    }
+
+    public String getAbout() {
+        return about;
     }
 
     public String getGithubUrl() {

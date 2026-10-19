@@ -1,14 +1,24 @@
 package com.portfolio.api.profile;
 
-public record ProfileResponse(
-        String name, String title, String tagline, String bio, String githubUrl) {
+import java.util.List;
 
-    static ProfileResponse from(Profile profile) {
+public record ProfileResponse(
+        String name,
+        String title,
+        String tagline,
+        String bio,
+        String about,
+        String githubUrl,
+        List<ProfileLinkResponse> links) {
+
+    static ProfileResponse from(Profile profile, List<ProfileLink> links) {
         return new ProfileResponse(
                 profile.getName(),
                 profile.getTitle(),
                 profile.getTagline(),
                 profile.getBio(),
-                profile.getGithubUrl());
+                profile.getAbout(),
+                profile.getGithubUrl(),
+                links.stream().map(ProfileLinkResponse::from).toList());
     }
 }

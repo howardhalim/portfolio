@@ -18,12 +18,19 @@ export type Project = z.infer<typeof projectSchema>;
 
 export const projectListSchema = z.array(projectSchema);
 
+export const profileLinkSchema = z.object({
+  label: z.string(),
+  url: z.string(),
+});
+
 export const profileSchema = z.object({
   name: z.string(),
   title: z.string(),
   tagline: z.string(),
   bio: z.string(),
+  about: z.string(),
   githubUrl: z.string().nullable(),
+  links: z.array(profileLinkSchema),
 });
 
 export type Profile = z.infer<typeof profileSchema>;
