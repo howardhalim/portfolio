@@ -91,3 +91,20 @@ export function toFieldErrors(error: z.ZodError): Record<string, string> {
   }
   return result;
 }
+
+export const adminLoginSchema = z.object({
+  username: z.string().trim().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+export type AdminLoginInput = z.infer<typeof adminLoginSchema>;
+
+export const loginResponseSchema = z.object({
+  token: z.string(),
+  expiresInSeconds: z.number(),
+});
+
+export const adminIdentitySchema = z.object({
+  username: z.string(),
+  roles: z.array(z.string()),
+});
