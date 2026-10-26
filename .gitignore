@@ -21,7 +21,9 @@ target/
 .env
 .env.local
 .env.*.local
+apps/api/src/main/resources/application-local.yml
 
 # OS
 .DS_Store
 Thumbs.db
+

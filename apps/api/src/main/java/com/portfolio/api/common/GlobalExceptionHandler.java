@@ -3,6 +3,7 @@ package com.portfolio.api.common;
 import com.portfolio.api.blog.BlogPostNotFoundException;
 import com.portfolio.api.profile.ProfileNotFoundException;
 import com.portfolio.api.project.ProjectNotFoundException;
+import com.portfolio.api.security.InvalidCredentialsException;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -27,9 +28,15 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleProfileNotFound(ProfileNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
     @ExceptionHandler(BlogPostNotFoundException.class)
     public ProblemDetail handleBlogPostNotFound(BlogPostNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ProblemDetail handleInvalidCredentials(InvalidCredentialsException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
