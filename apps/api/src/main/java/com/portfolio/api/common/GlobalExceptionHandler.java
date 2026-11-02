@@ -1,6 +1,7 @@
 package com.portfolio.api.common;
 
 import com.portfolio.api.blog.BlogPostNotFoundException;
+import com.portfolio.api.blog.SlugAlreadyExistsException;
 import com.portfolio.api.profile.ProfileNotFoundException;
 import com.portfolio.api.project.ProjectNotFoundException;
 import com.portfolio.api.security.InvalidCredentialsException;
@@ -32,6 +33,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BlogPostNotFoundException.class)
     public ProblemDetail handleBlogPostNotFound(BlogPostNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(SlugAlreadyExistsException.class)
+    public ProblemDetail handleSlugAlreadyExists(SlugAlreadyExistsException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)

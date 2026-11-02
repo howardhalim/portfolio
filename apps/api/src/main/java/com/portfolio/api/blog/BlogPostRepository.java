@@ -30,4 +30,12 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
             @Param("slug") String slug,
             @Param("profileSlug") String profileSlug,
             @Param("now") Instant now);
+
+    List<BlogPost> findByProfileSlugOrderByCreatedAtDesc(String profileSlug);
+
+    Optional<BlogPost> findByIdAndProfileSlug(Long id, String profileSlug);
+
+    boolean existsByProfileSlugAndSlug(String profileSlug, String slug);
+
+    boolean existsByProfileSlugAndSlugAndIdNot(String profileSlug, String slug, Long id);
 }
