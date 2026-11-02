@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { logoutAction } from '@/app/admin/actions';
 import { getAdminIdentity } from '@/lib/admin-api';
@@ -21,9 +22,14 @@ export default async function AdminHomePage() {
         <p className="mt-2 text-zinc-400">
           Signed in as <span className="text-zinc-200">{identity.username}</span>.
         </p>
-        <p className="mt-6 text-sm text-zinc-500">
-          Content management comes next: blog posts, projects, skills and your About text.
-        </p>
+
+        <Link
+          href="/admin/blog"
+          className="mt-8 inline-block rounded-md bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-400"
+        >
+          Manage blog posts
+        </Link>
+
         <form action={logoutAction} className="mt-8">
           <button
             type="submit"

@@ -35,6 +35,10 @@ export function LoginForm({ expired }: { expired: boolean }) {
 
     const result = await loginAction(parsed.data);
 
+    if (!result) {
+      return;
+    }
+
     setFormError(result.message);
     setSubmitting(false);
   }

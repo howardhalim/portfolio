@@ -108,3 +108,42 @@ export const adminIdentitySchema = z.object({
   username: z.string(),
   roles: z.array(z.string()),
 });
+
+export const adminBlogPostSchema = z.object({
+  id: z.number(),
+  slug: z.string(),
+  title: z.string(),
+  summary: z.string(),
+  content: z.string(),
+  published: z.boolean(),
+  publishedAt: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type AdminBlogPost = z.infer<typeof adminBlogPostSchema>;
+
+export const adminBlogPostListSchema = z.array(adminBlogPostSchema);
+
+export const blogPostFormSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .min(1, 'Slug is required')
+    .max(255, 'Slug must be at most 255 characters')
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use lowercase letters, digits and single hyphens'),
+  title: z.string().trim().min(1, 'Title is required').max(255, 'Title must be at most 255 characters'),
+  summary: z
+    .string()
+    .trim()
+    .min(1, 'Summary is required')
+    .max(1000, 'Summary must be at most 1000 characters'),
+  content: z
+    .string()
+    .trim()
+    .min(1, 'Content is required')
+    .max(50000, 'Content must be at most 50000 characters'),
+  published: z.boolean(),
+});
+
+export type BlogPostFormInput = z.infer<typeof blogPostFormSchema>;

@@ -5,7 +5,9 @@ import { adminLogin } from '@/lib/admin-api';
 import { clearAdminToken, setAdminToken } from '@/lib/admin-session';
 import { adminLoginSchema, type AdminLoginInput } from '@/lib/schemas';
 
-export async function loginAction(input: AdminLoginInput): Promise<{ ok: false; message: string }> {
+export async function loginAction(
+  input: AdminLoginInput,
+): Promise<{ ok: false; message: string } | undefined> {
   const parsed = adminLoginSchema.safeParse(input);
 
   if (!parsed.success) {
