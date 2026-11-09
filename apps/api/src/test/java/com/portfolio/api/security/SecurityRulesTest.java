@@ -24,13 +24,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @WebMvcTest(controllers = {AdminAuthController.class, ProjectController.class})
-@Import({SecurityConfig.class, AdminAuthService.class, TokenService.class})
+@Import({SecurityConfig.class, AdminSecurityConfig.class, AdminAuthService.class, TokenService.class})
 @EnableConfigurationProperties(AdminProperties.class)
 @TestPropertySource(
         properties = {
             "app.admin.username=admin",
             "app.admin.jwt-secret=test-secret-test-secret-test-secret-123456",
-            "app.profile.slug=default"
+            "app.profile.slug=default",
+            "app.admin.enabled=true"
         })
 class SecurityRulesTest {
 

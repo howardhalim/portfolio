@@ -1,10 +1,12 @@
 package com.portfolio.api.security;
 
+import com.portfolio.api.common.ConditionalOnAdminEnabled;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@ConditionalOnAdminEnabled
 @Service
 public class AdminAuthService {
 

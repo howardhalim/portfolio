@@ -1,5 +1,6 @@
 package com.portfolio.api.blog;
 
+import com.portfolio.api.common.ConditionalOnAdminEnabled;
 import com.portfolio.api.profile.Profile;
 import com.portfolio.api.profile.ProfileNotFoundException;
 import com.portfolio.api.profile.ProfileProperties;
@@ -9,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@ConditionalOnAdminEnabled
 @Service
 public class BlogPostAdminService {
 

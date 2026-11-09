@@ -1,5 +1,6 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { API_BASE_URL } from './api';
+import { isAdminEnabled } from './admin-config';
 import { getAdminToken } from './admin-session';
 import {
   adminBlogPostListSchema,
@@ -27,6 +28,10 @@ export type SaveFailure = {
 export type SaveResult = { ok: true; id: number } | SaveFailure;
 
 export async function adminLogin(input: AdminLoginInput): Promise<AdminLoginResult> {
+  if (!isAdminEnabled()) {
+    return { ok: false, message: 'Admin is not available.' };
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
       method: 'POST',
@@ -71,6 +76,10 @@ export async function getAdminIdentity(token: string): Promise<{ username: strin
 }
 
 async function adminRequest(path: string, init: RequestInit = {}): Promise<Response | null> {
+  if (!isAdminEnabled()) {
+    notFound();
+  }
+
   const token = getAdminToken();
 
   if (!token) {

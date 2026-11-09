@@ -1,5 +1,6 @@
 package com.portfolio.api.security;
 
+import com.portfolio.api.common.ConditionalOnAdminEnabled;
 import jakarta.validation.Valid;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@ConditionalOnAdminEnabled
 @RestController
 @RequestMapping("/api/admin")
 public class AdminAuthController {

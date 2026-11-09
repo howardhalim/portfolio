@@ -1,5 +1,6 @@
 package com.portfolio.api.blog;
 
+import com.portfolio.api.common.ConditionalOnAdminEnabled;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@ConditionalOnAdminEnabled
 @RestController
 @RequestMapping("/api/admin/blog-posts")
 public class BlogPostAdminController {
