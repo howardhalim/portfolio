@@ -1,0 +1,17 @@
+# Builds the web image in Google Cloud Build.
+# Run from the repo root (the web build needs the whole monorepo as context):
+#   gcloud builds submit . --config=deploy/cloudbuild-web.yaml --substitutions=_TAG=v1
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env: ['DOCKER_BUILDKIT=1']
+    args:
+      - build
+      - -f
+      - apps/web/Dockerfile
+      - -t
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/portfolio/web:${_TAG}
+      - .
+images:
+  - asia-southeast1-docker.pkg.dev/$PROJECT_ID/portfolio/web:${_TAG}
+substitutions:
+  _TAG: latest

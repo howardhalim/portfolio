@@ -80,7 +80,7 @@ async function adminRequest(path: string, init: RequestInit = {}): Promise<Respo
     notFound();
   }
 
-  const token = getAdminToken();
+  const token = await getAdminToken();
 
   if (!token) {
     redirect('/admin/login?expired=1');

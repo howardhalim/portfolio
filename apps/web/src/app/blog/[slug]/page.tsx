@@ -5,18 +5,18 @@ import { getBlogPost } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 
 type BlogPostPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+  const post = await getBlogPost((await params).slug);
   return post
     ? { title: post.title, description: post.summary }
     : { title: 'Post not found' };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug);
+  const post = await getBlogPost((await params).slug);
 
   if (!post) {
     notFound();

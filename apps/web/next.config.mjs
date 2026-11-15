@@ -7,9 +7,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: path.join(dirname, '../../'),
-  },
+  poweredByHeader: false,
+  outputFileTracingRoot: path.join(dirname, '../../'),
 };
 
 export default nextConfig;

@@ -1,14 +1,27 @@
-name: CI
+name: CI/CD
+
+# Pull requests and pushes to main run the checks.
+# Pushes to main also deploy to Google Cloud Run, but only once the repository
+# variable DEPLOY_ENABLED is set to "true" (see "Deploying to Google Cloud" in the README).
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Cancel superseded runs on pull requests, but never cancel a deploy half way.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  lint-web:
-    name: Lint (web)
+  web:
+    name: Web (lint, types, build)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,8 +37,19 @@ jobs:
       - name: Lint
         run: npm run lint --workspace=web
 
-  lint-api:
-    name: Lint (api)
+      - name: Generate route types
+        run: npx next typegen
+        working-directory: apps/web
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: apps/web
+
+      - name: Build
+        run: npm run build --workspace=web
+
+  api:
+    name: API (tests)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,8 +63,72 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # TODO: swap this for a real Checkstyle/Spotless gate once static
-      # analysis is wired up (code-quality step). For now this only verifies
-      # the project compiles, which is the closest thing to "lint" we have.
-      - name: Compile (placeholder for lint)
-        run: mvn -B -q compile
+      # The tests do not need a database: they use mocks and MockMvc.
+      - name: Test
+        run: mvn -B verify
+
+  deploy:
+    name: Deploy to Cloud Run
+    needs: [web, api]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # lets the job ask GitHub for a short-lived identity token (no stored keys)
+    env:
+      REGION: asia-southeast1
+      REGISTRY: asia-southeast1-docker.pkg.dev/howard-portfolio-888888/portfolio
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (Workload Identity Federation)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/23240902945/locations/global/workloadIdentityPools/github/providers/github-provider
+          service_account: github-deployer@howard-portfolio-888888.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Let Docker push to Artifact Registry
+        run: gcloud auth configure-docker asia-southeast1-docker.pkg.dev --quiet
+
+      - name: Build and push the API image
+        run: |
+          docker build -t "$REGISTRY/api:$GITHUB_SHA" apps/api
+          docker push "$REGISTRY/api:$GITHUB_SHA"
+
+      # Only the image changes: environment variables, secrets and the service
+      # account set on the first deploy are kept by Cloud Run.
+      - name: Deploy the API
+        run: |
+          gcloud run deploy portfolio-api \
+            --image="$REGISTRY/api:$GITHUB_SHA" \
+            --region="$REGION"
+
+      - name: Check the API is healthy
+        run: |
+          URL=$(gcloud run services describe portfolio-api --region="$REGION" --format='value(status.url)')
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS "$URL/actuator/health" | grep -q '"status":"UP"'; then
+              echo "API is up"; exit 0
+            fi
+            echo "Waiting for the API ($i/6)..."; sleep 10
+          done
+          echo "API did not become healthy"; exit 1
+
+      - name: Build and push the web image
+        run: |
+          docker build -f apps/web/Dockerfile -t "$REGISTRY/web:$GITHUB_SHA" .
+          docker push "$REGISTRY/web:$GITHUB_SHA"
+
+      - name: Deploy the web app
+        run: |
+          gcloud run deploy portfolio-web \
+            --image="$REGISTRY/web:$GITHUB_SHA" \
+            --region="$REGION"
+
+      - name: Check the site is up
+        run: |
+          URL=$(gcloud run services describe portfolio-web --region="$REGION" --format='value(status.url)')
+          curl -fsS -o /dev/null "$URL/"
+          echo "Site responded at $URL"

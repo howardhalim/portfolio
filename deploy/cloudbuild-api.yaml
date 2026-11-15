@@ -1,0 +1,16 @@
+# Builds the API image in Google Cloud Build.
+# Run from the repo root:
+#   gcloud builds submit apps/api --config=deploy/cloudbuild-api.yaml --substitutions=_TAG=v1
+# BuildKit is switched on because apps/api/Dockerfile uses a cache mount.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env: ['DOCKER_BUILDKIT=1']
+    args:
+      - build
+      - -t
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/portfolio/api:${_TAG}
+      - .
+images:
+  - asia-southeast1-docker.pkg.dev/$PROJECT_ID/portfolio/api:${_TAG}
+substitutions:
+  _TAG: latest

@@ -20,11 +20,11 @@ export async function loginAction(
     return { ok: false, message: result.message };
   }
 
-  setAdminToken(result.token, result.expiresInSeconds);
+  await setAdminToken(result.token, result.expiresInSeconds);
   redirect('/admin');
 }
 
 export async function logoutAction(): Promise<void> {
-  clearAdminToken();
+  await clearAdminToken();
   redirect('/admin/login');
 }

@@ -4,16 +4,16 @@ import { notFound } from 'next/navigation';
 import { getProject } from '@/lib/api';
 
 type ProjectPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const project = await getProject(params.slug);
+  const project = await getProject((await params).slug);
   return { title: project ? project.title : 'Project not found' };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const project = await getProject(params.slug);
+  const project = await getProject((await params).slug);
 
   if (!project) {
     notFound();

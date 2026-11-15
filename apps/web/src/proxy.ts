@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_COOKIE } from '@/lib/admin-cookie';
 import { isAdminEnabled } from '@/lib/admin-config';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!isAdminEnabled()) {
     return NextResponse.rewrite(new URL('/admin-is-disabled', request.url));
   }

@@ -8,7 +8,7 @@ import { getAdminToken } from '@/lib/admin-session';
 export const metadata: Metadata = { title: 'Admin' };
 
 export default async function AdminHomePage() {
-  const token = getAdminToken();
+  const token = await getAdminToken();
   const identity = token ? await getAdminIdentity(token) : null;
 
   if (!identity) {
