@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL } from '@/lib/site-config';
+import Link from 'next/link';
 
 export function ContactCta() {
   return (
@@ -10,12 +10,12 @@ export function ContactCta() {
         <p className="mt-4 text-zinc-400">
           Have a project in mind or just want to say hi? I&apos;d love to hear from you.
         </p>
-        <a
-          href={`mailto:${CONTACT_EMAIL}`}
+        <Link
+          href="/contact"
           className="mt-8 inline-block rounded-md bg-indigo-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-indigo-400"
         >
-          Email me
-        </a>
+          Contact me
+        </Link>
       </div>
     </section>
   );

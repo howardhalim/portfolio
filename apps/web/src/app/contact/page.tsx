@@ -19,12 +19,10 @@ export default async function ContactPage() {
           Have a project in mind or just want to say hi? The best way to reach me is by email.
         </p>
 
-        <a
-          href={`mailto:${CONTACT_EMAIL}`}
-          className="mt-8 inline-block rounded-md bg-indigo-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-indigo-400"
-        >
+        {/* Plain text, not a mailto: link, so it works without a mail app; select-all = one click selects it for copying. */}
+        <p className="mt-8 inline-block select-all rounded-md border border-zinc-700 bg-zinc-900 px-6 py-3 text-sm font-medium text-zinc-50">
           {CONTACT_EMAIL}
-        </a>
+        </p>
 
         {profile && profile.links.length > 0 && (
           <div className="mt-12 border-t border-zinc-900 pt-8">

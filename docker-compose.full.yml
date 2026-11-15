@@ -1,5 +1,6 @@
 # Production-like stack for local testing: database + API + web, admin OFF.
-# Run with: docker compose -f docker-compose.full.yml -p portfolio-full up --build
+# Run with: docker compose -f docker-compose.full.yml -p portfolio-full up --build -d
+# (drop -d to stream logs in the terminal; Ctrl+C then stops the containers)
 # Uses its own ports (API 8081, web 3001) and its own database volume, so it
 # does not interfere with the normal dev setup.
 services:
