@@ -43,6 +43,13 @@
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- Lets the API connect to Cloud SQL on GCP (only used when the JDBC URL asks for it). -->
+    <dependency>
+      <groupId>com.google.cloud.sql</groupId>
+      <artifactId>postgres-socket-factory</artifactId>
+      <version>1.31.0</version>
+      <scope>runtime</scope>
+    </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
