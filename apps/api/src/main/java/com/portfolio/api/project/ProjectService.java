@@ -19,7 +19,9 @@ public class ProjectService {
     }
 
     public List<ProjectResponse> getAllProjects() {
-        return projectRepository.findByProfileSlug(profileProperties.slug()).stream()
+        return projectRepository
+                .findByProfileSlugOrderByDisplayOrderAscIdAsc(profileProperties.slug())
+                .stream()
                 .map(ProjectResponse::from)
                 .toList();
     }

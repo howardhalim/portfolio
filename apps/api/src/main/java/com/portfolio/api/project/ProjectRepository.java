@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    List<Project> findByProfileSlug(String profileSlug);
+    List<Project> findByProfileSlugOrderByDisplayOrderAscIdAsc(String profileSlug);
 
     Optional<Project> findBySlugAndProfileSlug(String slug, String profileSlug);
 }
