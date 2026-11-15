@@ -35,7 +35,7 @@ export function ProjectCard({ project }: { project: Project }) {
             rel="noreferrer"
             className="font-medium text-indigo-400 hover:text-indigo-300"
           >
-            Live →
+            View →
           </a>
         )}
       </div>

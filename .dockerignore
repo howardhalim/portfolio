@@ -1,0 +1,11 @@
+.git
+.github
+.claude
+**/node_modules
+**/.next
+**/target
+**/.env
+**/.env.*
+**/application-local.yml
+apps/api
+*.md

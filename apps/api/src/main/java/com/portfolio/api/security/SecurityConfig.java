@@ -30,8 +30,6 @@ public class SecurityConfig {
                                                 "/api/blog-posts",
                                                 "/api/blog-posts/*")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/api/contact")
-                                        .permitAll()
                                         .requestMatchers("/actuator/health", "/error")
                                         .permitAll()
                                         .anyRequest()

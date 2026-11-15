@@ -52,6 +52,16 @@ class SecurityRulesTest {
     }
 
     @Test
+    void contactSubmissionsAreNoLongerPublic() throws Exception {
+        mockMvc.perform(
+                        post("/api/contact")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        "{\"name\":\"Visitor\",\"email\":\"visitor@example.com\",\"message\":\"Hello there\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void endpointsThatWereNeverOpenedAreDenied() throws Exception {
         mockMvc.perform(get("/api/not-listed")).andExpect(status().isUnauthorized());
     }
